@@ -1,0 +1,150 @@
+<html>
+<head>
+	<style>
+		.textbox{
+			border: 4px solid #57A8F5;
+			width: 75%;
+			border-radius: 12px;
+			font-size: 27px;
+			background-image: url('search icon.png');
+			background-position: 5px 5px;
+			background-repeat: no-repeat;
+			background-size: 50px 50px;
+			padding:  10px 70px;
+		}
+		.searchButton{
+			border: 4px solid #57A8F5;
+			border-radius: 13px;
+			font-size: 35px;
+			font-family: arial;
+			transition-duration: 0.4s;
+			cursor: pointer;
+			padding: 5px 5px;
+			width: 11%;
+			margin: 4px 2px;
+		}
+		.searchButton:hover {
+			background-color: #06D2F2;
+			color: white;
+		}
+	</style>
+</head>
+<script>
+
+			// Canvas context; used to call Canvas methods
+			var c;
+
+			// Canvas width and height.
+			var cWidth, cHeight;
+
+			// Stores the current keyboard state
+			var curkeys = [];
+			
+			// Stores keys that have been newly pressed since last update
+			var newkeys = [];
+			
+			
+			var rectImg;
+			
+			var gameState = "Start";
+			
+			
+			// Initializes entire game framework. This method should only be called
+			// once, by the body onload event handler.
+			function gameFrameworkInit(){	
+				
+				var arrayOfNumbers = "";
+				for(var i=1; i<= 118; i++){
+					arrayOfNumbers += i + " ";
+				}
+				atomicNumberArray = arrayOfNumbers.split(" ");
+				atomicNumberArray.splice(118, 1);
+			
+				
+				// Initialize key arrays
+				for (i = 0; i < 256; i++){
+					curkeys[i] = false;
+					newkeys[i] = false;
+				}
+			
+				// Initialize global variables for canvas
+				c = myCanvas.getContext('2d');
+				cWidth = myCanvas.width;
+				cHeight = myCanvas.height;
+
+
+				// Start listeners for getting keyboard state
+				window.addEventListener('keydown',
+										 function(e){
+											if (!curkeys[e.keyCode]){
+												curkeys[e.keyCode] = true;
+												newkeys[e.keyCode] = true;
+											}
+										 }
+									   );
+				
+				window.addEventListener('keyup',
+										 function(e){ curkeys[e.keyCode] = false; }
+									   );
+
+				// Schedule the update function to be called right before the next repaint.
+				// (At the end of the update function, it will schedule itself to be called
+				// again before the NEXT repaint, and so on.
+				
+				rectImg = new Image();
+				rectImg.src = "canvas.png"
+				rectImg.onload = function() {
+					window.requestAnimationFrame(gameUpdate);
+				}
+			}
+
+
+
+
+
+		
+			
+			function gameUpdate(){
+				// Reset newkeys
+				if(gameState == "Start")
+				{
+					if(newkeys[32])
+					{
+						idIntroScreen.innerHTML = '<input id="idTextBox" class="textbox" type="text" name="userSearch" placeholder="Find a place of interest..."><br><br><p class="searchButton" id="userClick">Search</p><br><br><img src="scale.png" height="149px" width="600px"></center>'
+						gameState = "STOP";
+						idTextBox.focus();
+					}
+				}
+				
+				for (i = 0; i < 256; i++){
+					newkeys[i] = false;
+				}
+				// At the end of the update function, repaint the screen
+				gameDraw();
+					
+				// Last thing the update function does is to schedule itself to be called
+				// again before the next repaint
+				window.requestAnimationFrame(gameUpdate);
+			}
+		
+		function gameDraw(){
+			// Clear the canvas before we draw the current frame
+			c.clearRect(0,0,cWidth,cHeight);
+			c.drawImage(rectImg, 0, 0, cWidth, cHeight);
+	
+			
+		}
+</script>
+<body onLoad="gameFrameworkInit()">
+	<form>
+		
+		<center>
+		<div id="idIntroScreen"><canvas id="myCanvas" width="1253" height="705" style="border:1px"></canvas></div>
+		
+	
+		</center>
+		
+	</form>
+</body>
+</html>
+
